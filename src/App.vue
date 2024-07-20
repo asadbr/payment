@@ -1,30 +1,98 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="container h-full px-[15px] md:px-0">
+    <div class="py-10">
+      <PaymentTitle />
+      <PaymentCurrencySelection
+        :selectedCurrency="selectedCurrency"
+        :selectItems="selectItems"
+        @setCurrency="selectedCurrency = $event"
+      />
+      <PaymentMethodSelection
+        :selectedMethod="selectedMethod"
+        :paymentMethods="paymentMethods"
+        @setMethod="selectedMethod = $event"
+      />
+      <PaymentAmount
+        :customPaymentAmounts="customPaymentAmounts"
+        :selectedMethod="selectedMethod"
+      />
+      <div class="w-full mt-6">
+        <button
+          class="bg-custom-gradient text-white w-full rounded-xl p-4"
+          @click="setPayment"
+        >
+          Оплатить
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { paymentsApi } from "@/api/paymentsApi";
+import { TPayment, TPaymentMethod } from "@/types/payments";
+import PaymentTitle from "@/components/payment/PaymentTitle.vue";
+import PaymentCurrencySelection from "@/components/payment/PaymentCurrencySelection.vue";
+import PaymentMethodSelection from "@/components/payment/PaymentMethodSelection.vue";
+import PaymentAmount from "@/components/payment/PaymentAmount.vue";
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+type TSelectItem = {
+  title: string;
+  value: string;
+  svg?: string;
+};
+
+const loading = ref(false);
+const payment = ref<TPayment>({} as TPayment);
+const selectedCurrency = ref("");
+const selectItems = ref<TSelectItem[]>([{ title: "Другие валюты", value: "" }]);
+const selectedMethod = ref<TPaymentMethod>({} as TPaymentMethod);
+const paymentMethods = ref<TPaymentMethod[]>([]);
+const customPaymentAmounts = ref<number[]>([]);
+
+getPaymentMethods();
+
+function getPaymentMethods() {
+  loading.value = true;
+  paymentsApi
+    .getPaymentTypes()
+    .then((res) => {
+      payment.value = res.data;
+      selectedCurrency.value = res.data.default_currency;
+      selectItems.value.push(
+        ...Object.keys(res.data.currencies).map((currency) => ({
+          title: currency,
+          value: currency,
+        }))
+      );
+    })
+    .finally(() => (loading.value = false));
 }
 
-nav {
-  padding: 30px;
-}
+watch(
+  () => selectedCurrency.value,
+  () => {
+    paymentMethods.value = [
+      ...payment.value.currencies[selectedCurrency.value],
+    ];
+  }
+);
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+watch(
+  () => selectedMethod.value,
+  () => {
+    customPaymentAmounts.value = [];
+    for (let i = 0; i < 6; i++) {
+      customPaymentAmounts.value.push(
+        selectedMethod.value.min_amount + i * 1000
+      );
+    }
+  }
+);
 
-nav a.router-link-exact-active {
-  color: #42b983;
+function setPayment() {
+  const tagA = document.createElement("a");
+  tagA.href = "https://www.github.com";
+  tagA.click();
 }
-</style>
+</script>

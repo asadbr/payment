@@ -11,7 +11,7 @@
     <div class="flex flex-wrap gap-6 mb-[30px]">
       <div
         class="md:w-[179px] w-[160px] md:h-[68px] h-[48px]"
-        @click="selectedCurrency = 'CRYPTO'"
+        @click="setPaymentCurrency('CRYPTO')"
       >
         <div
           :class="{
@@ -37,7 +37,7 @@
           <div class="flex items-center w-full divide-x">
             <div class="flex items-center h-full md:gap-x-4 gap-x-2 px-3">
               <img
-                src="./assets/svgs/russia.svg"
+                src="../../assets/svgs/russia.svg"
                 alt="russia flag"
                 class="min-h-6 min-w-6 h-6 w-6"
               />
@@ -60,7 +60,11 @@
 <script setup lang="ts">
 import { BsQuestionCircleFill, CiBitcoin } from "@kalimahapps/vue-icons";
 import TheSelect from "@/components/TheSelect.vue";
-import { toRefs, defineProps } from "vue";
+import { toRefs, defineProps, defineEmits } from "vue";
+
+const emit = defineEmits<{
+  (e: "setCurrency", value: string): void;
+}>();
 
 type TSelectItem = {
   title: string;
@@ -77,6 +81,6 @@ const props = defineProps<TProps>();
 const { selectedCurrency, selectItems } = toRefs(props);
 
 function setPaymentCurrency(currency: string) {
-  selectedCurrency.value = currency;
+  emit("setCurrency", currency);
 }
 </script>
