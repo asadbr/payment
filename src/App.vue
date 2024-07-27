@@ -4,7 +4,8 @@
       <PaymentTitle />
       <PaymentCurrencySelection
         :selectedCurrency="selectedCurrency"
-        :selectItems="selectItems"
+        :defaultCurrency="payment.default_currency || ''"
+        :items="selectItems"
         @setCurrency="selectedCurrency = $event"
       />
       <PaymentMethodSelection
@@ -15,6 +16,7 @@
       <PaymentAmount
         :customPaymentAmounts="customPaymentAmounts"
         :selectedMethod="selectedMethod"
+        @setAmount="minAmount = $event"
       />
       <div class="w-full mt-6">
         <button
@@ -45,10 +47,11 @@ type TSelectItem = {
 const loading = ref(false);
 const payment = ref<TPayment>({} as TPayment);
 const selectedCurrency = ref("");
-const selectItems = ref<TSelectItem[]>([{ title: "Другие валюты", value: "" }]);
+const selectItems = ref<TSelectItem[]>([]);
 const selectedMethod = ref<TPaymentMethod>({} as TPaymentMethod);
 const paymentMethods = ref<TPaymentMethod[]>([]);
 const customPaymentAmounts = ref<number[]>([]);
+const minAmount = ref(0);
 
 getPaymentMethods();
 
@@ -91,6 +94,10 @@ watch(
 );
 
 function setPayment() {
+  console.log("selectedMethod.value", selectedMethod.value.min_amount);
+  if (selectedMethod.value?.min_amount > minAmount.value) {
+    return;
+  }
   const tagA = document.createElement("a");
   tagA.href = "https://www.github.com";
   tagA.click();

@@ -1,14 +1,14 @@
 <template>
   <div class="mb-[30px]">
-    <p class="mb-2">Выберите способ оплаты</p>
+    <p class="mb-2 md:text-xl text-sm">Выберите способ оплаты</p>
     <div
-      class="flex flex-wrap gap-4 max-h-[214px] overflow-y-auto overflow-x-hidden mb-[15px]"
+      class="flex flex-wrap gap-4 max-h-[214px] overflow-y-auto overflow-x-hidden pb-[15px]"
     >
       <div
         :class="{
           '!border-[#E2C299]': selectedMethod.title === method.title,
         }"
-        class="md:rounded-xl rounded-[10px] relative py-[15px] px-6 flex justify-center items-center shadow-sm h-full border-2 border-white cursor-pointer"
+        class="md:rounded-xl rounded-[10px] relative py-[15px] px-6 flex justify-center items-center shadow-[0_0_15px_0_rgba(0,0,0,0.06)] h-full border-2 border-white cursor-pointer"
         v-for="(method, index) in paymentMethods"
         :key="index"
         @click="setPaymentMethod(method)"
@@ -16,8 +16,10 @@
         <div class="flex items-center h-full gap-x-2">
           <MdRoundAttachMoney class="h-6 w-6" />
           <div class="flex flex-col">
-            <p class="font-medium">{{ method.title }}</p>
-            <p class="text-gray-400 text-[13px]">
+            <p class="font-medium md:text-base text-[13px]">
+              {{ method.title }}
+            </p>
+            <p class="text-gray-400 md:text-[13px] text-[11px]">
               <span class="text-gray-300">Комиссия: </span>
               {{ method.commission }}
             </p>
@@ -35,20 +37,17 @@
         class="flex items-center gap-x-2 cursor-pointer"
         @click="isOpenPaymentInfo = !isOpenPaymentInfo"
       >
-        <p class="font-medium text-sm">
+        <p class="font-medium md:text-sm text-xs">
           Внимание, при нажатии раскрывается информация про страны
         </p>
-        <BsChevronDown
+        <AkChevronDown
           v-if="!isOpenPaymentInfo"
-          class="h-[14px] w-[14px] min-h-[14px] min-w-[14px]"
+          class="h-4 w-4 min-h-4 min-w-4"
         />
-        <BsChevronUp
-          v-else
-          class="h-[14px] w-[14px] min-h-[14px] min-w-[14px]"
-        />
+        <AkChevronUp v-else class="h-4 w-4 min-h-4 min-w-4" />
       </div>
     </div>
-    <p v-if="isOpenPaymentInfo">
+    <p v-if="isOpenPaymentInfo" class="md:text-base text-xs mt-4">
       {{ selectedMethod.description }}
     </p>
   </div>
@@ -56,8 +55,8 @@
 
 <script setup lang="ts">
 import {
-  BsChevronDown,
-  BsChevronUp,
+  AkChevronDown,
+  AkChevronUp,
   CaWarningFilled,
   MdRoundAttachMoney,
 } from "@kalimahapps/vue-icons";
