@@ -6,6 +6,7 @@
         'relative flex rounded-xl bg-white py-2.5 px-3',
         'border-2 border-gray-200',
         { 'border-red-600 focus:!border-red-600': error },
+        { 'border-[#E2C299] focus:border-[#E2C299]': isFocused },
       ]"
     >
       <div class="w-full">
