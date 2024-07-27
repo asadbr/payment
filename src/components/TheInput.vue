@@ -4,7 +4,7 @@
       @click="setFocus"
       :class="[
         'relative flex rounded-xl bg-white py-2.5 px-3',
-        'border border-gray-200',
+        'border-2 border-gray-200',
         { 'border-red-600 focus:!border-red-600': error },
       ]"
     >
