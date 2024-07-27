@@ -20,7 +20,7 @@
       <div
         v-for="(amount, index) in customPaymentAmounts"
         :key="index"
-        class="rounded-[10px] bg-gray-100 py-1 px-3 cursor-pointer border border-white"
+        class="rounded-[10px] bg-gray-100 py-1 px-3 cursor-pointer border-2 border-white"
         @click="setPayment(amount)"
         :class="{
           '!border-[#E2C299]': paymentAmount === amount,
