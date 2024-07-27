@@ -94,7 +94,6 @@ watch(
 );
 
 function setPayment() {
-  console.log("selectedMethod.value", selectedMethod.value.min_amount);
   if (selectedMethod.value?.min_amount > minAmount.value) {
     return;
   }
